@@ -1,0 +1,101 @@
+﻿@model List<string>
+@{
+}
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="~/css/templatemo_main.css">
+    <style>
+        body {
+            background-image: url('/images/background/background1.jpg');
+            background-size: cover; /* Đảm bảo hình ảnh phủ đầy màn hình */
+            background-position: center; /* Canh giữa hình ảnh */
+            background-repeat: no-repeat; /* Không lặp lại hình ảnh */
+            /* margin: 0; */ /* Xóa khoảng trắng mặc định của trình duyệt */
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: space-between; /* Căn chỉnh giữa tiêu đề và các nút */
+            width: 100%;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center; /* Căn giữa các nút theo chiều dọc */
+        }
+
+        .round-btn {
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold; /* In đậm chữ */
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none; /* Loại bỏ gạch dưới */
+            border-radius: 30px; /* Bo tròn */
+            margin-left: 10px; /* Khoảng cách giữa các nút */
+        }
+
+        .left-btn {
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            text-weight: bold;
+        }
+
+        .right-btn {
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+            text-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="main-wrapper">
+        <div class="container">
+            @*  <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="templatemo-site-title">
+                        <h1 class="site-name"><a href="#">Các chủ đề</a></h1>
+                    </div>
+                </div>
+            </div> *@
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 templatemo-content-wrapper">
+                    <div class="templatemo-content">
+                        <section id="templatemo-page1-text" class="active">
+                            <div class="col-sm-12 col-md-12">
+                                <div class="header-container">
+                                    <h2>Tất cả bài đã làm</h2>
+                                </div>
+                                <div id="slider" class="flexslider">
+                                    <ul class="slides">
+                                        @for (int i = 0; i < Model.Count; i++)
+                                        {
+                                            <li>
+                                                <img style="height:500px;width: 600px" src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]" />
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery.backstretch.min.js"></script>
+    <script src="~/js/jquery.flexslider.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/templatemo_script.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+﻿@model List<string>
+@{
+    Layout = null; // Hoặc cấu hình Layout tùy thuộc vào dự án của bạn
+}
+
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <title>Hình ảnh chủ đề @ViewBag.Topic</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="~/css/templatemo_main.css">
+    <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            padding: 20px;
+        }
+
+            .image-grid img {
+                width: 100%;
+                height: auto;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+        .back-button {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Hình ảnh chủ đề: @ViewBag.Topic</h1>
+    <a href="/Topic/Index" class="back-button">Quay lại</a>
+    <div class="image-grid">
+        @foreach (var image in Model)
+        {
+            <img src="~/images/topic/@ViewBag.Topic/@image" onclick="selectImage('/images/topic/@ViewBag.Topic/@image')" alt="Hình ảnh" />
+        }
+    </div>
+</body>
+<script>
+        function selectImage(imageUrl) {
+        // Lưu URL hình ảnh vào localStorage
+        localStorage.setItem('selectedImage', imageUrl);
+        // Điều hướng sang trang canvas
+        window.location.href = "/DrawingPicture/ColorPicture";
+    }
+</script>
+</html>
