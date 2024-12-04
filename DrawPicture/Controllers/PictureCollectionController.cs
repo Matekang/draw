@@ -6,34 +6,43 @@ namespace DrawPicture.Controllers
     {
         public IActionResult ShowMyPicture()
         {
-            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "topic");
+            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureDrawn");
 
             if (!Directory.Exists(imageFolderPath))
             {
                 return View(new List<string>());
             }
 
-            var directories = Directory.GetDirectories(imageFolderPath)
-                                       .Select(folder => $"{Path.GetFileName(folder)}")
+            var imageFiles = Directory.GetFiles(imageFolderPath)
+                                       .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                      file.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                                      file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                      file.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+                                       .Select(file => Path.GetFileName(file))
                                        .ToList();
 
-            return View(directories);
+            return View(imageFiles);
         }
+
 
         public IActionResult DisplayCollection()
         {
-            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "topic");
+            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureDrawn");
 
             if (!Directory.Exists(imageFolderPath))
             {
                 return View(new List<string>());
             }
 
-            var directories = Directory.GetDirectories(imageFolderPath)
-                                       .Select(folder => $"{Path.GetFileName(folder)}")
+            var imageFiles = Directory.GetFiles(imageFolderPath)
+                                       .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                                                      file.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
+                                                      file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
+                                                      file.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
+                                       .Select(file => Path.GetFileName(file))
                                        .ToList();
 
-            return View(directories);
+            return View(imageFiles);
         }
     }
 }
