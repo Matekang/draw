@@ -97,6 +97,15 @@ body, html {
         cursor: pointer;
     }
 
+.image-button-th {
+    border: none;
+    background-color: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+    .image-button-th img {
+        height: 450px;
+    }
 .menu-container {
     position: relative;
     top: 10px;
