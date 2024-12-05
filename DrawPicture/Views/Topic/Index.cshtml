@@ -16,57 +16,86 @@
             background-size: cover; /* Đảm bảo hình ảnh phủ đầy màn hình */
             background-position: center; /* Canh giữa hình ảnh */
             background-repeat: no-repeat; /* Không lặp lại hình ảnh */
-            /* margin: 0; */ /* Xóa khoảng trắng mặc định của trình duyệt */
         }
-.header-container {
-    display: flex;
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: space-between; /* Căn chỉnh giữa tiêu đề và các nút */
-    width: 100%;
-}
 
-.button-container {
-    display: flex;
-    align-items: center; /* Căn giữa các nút theo chiều dọc */
-}
+        .header-container {
+            display: flex;
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: space-between; /* Căn chỉnh giữa tiêu đề và các nút */
+            width: 100%;
+        }
 
-.round-btn {
-    padding: 10px 20px;
-    border: none;
-    font-size: 16px;
-    font-weight: bold; /* In đậm chữ */
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    text-decoration: none; /* Loại bỏ gạch dưới */
-    border-radius: 30px; /* Bo tròn */
-    margin-left: 10px; /* Khoảng cách giữa các nút */
-}
+        .button-container {
+            display: flex;
+            align-items: center; /* Căn giữa các nút theo chiều dọc */
+        }
 
-.left-btn {
-    border-top-left-radius: 30px;
-    border-bottom-left-radius: 30px;
-    text-weight: bold;
-}
+        .round-btn {
+            padding: 10px 20px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold; /* In đậm chữ */
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none; /* Loại bỏ gạch dưới */
+            border-radius: 30px; /* Bo tròn */
+            margin-left: 10px; /* Khoảng cách giữa các nút */
+        }
 
-.right-btn {
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-    text-weight: bold;
-}
+        .left-btn {
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+        }
 
+        .right-btn {
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        }
+
+        .slides li {
+            display: flex; /* Sử dụng flexbox */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            height: 500px; /* Chiều cao khung ảnh */
+            width: 600px; /* Chiều rộng khung ảnh */
+            overflow: hidden; /* Ẩn phần dư thừa */
+            background-color: #fff; /* Đặt màu nền nếu cần */
+            margin: auto;
+        }
+
+        .slides img {
+            max-height: 100%; /* Đảm bảo hình ảnh không vượt quá chiều cao khung */
+            max-width: 100%; /* Đảm bảo hình ảnh không vượt quá chiều rộng khung */
+            object-fit: contain; /* Giữ tỷ lệ hình ảnh */
+        }
+
+        #carousel .slides li {
+            display: flex;
+            flex-direction: column; /* Nội dung xếp dọc */
+            align-items: center; /* Căn giữa */
+            justify-content: center;
+            text-align: center;
+            height: 150px; /* Chiều cao giảm xuống */
+        }
+
+        #carousel .slides img {
+            height: 80px; /* Hình ảnh nhỏ hơn */
+            width: auto; /* Đảm bảo tỷ lệ đúng */
+            object-fit: contain;
+            margin-bottom: 5px; /* Khoảng cách giữa ảnh và chữ */
+        }
+
+        #carousel .slides p {
+            font-size: 12px; /* Kích thước chữ nhỏ hơn */
+            margin: 0; /* Loại bỏ khoảng cách thừa */
+            color: #333; /* Màu chữ rõ nét hơn */
+        }
     </style>
 </head>
 <body>
     <div id="main-wrapper">
         <div class="container">
-            @*  <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="templatemo-site-title">
-                        <h1 class="site-name"><a href="#">Các chủ đề</a></h1>
-                    </div>
-                </div>
-            </div> *@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 templatemo-content-wrapper">
                     <div class="templatemo-content">
@@ -83,9 +112,9 @@
                                     <ul class="slides">
                                         @for (int i = 0; i < Model.Count; i++)
                                         {
-                                                 <li>
-                                                     <img style="height:500px;width: 600px" src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]"/>
-                                                 </li>
+                                            <li>
+                                                <img src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]" />
+                                            </li>
                                         }
                                     </ul>
                                 </div>
@@ -93,14 +122,13 @@
                                     <ul class="slides">
                                         @for (int i = 0; i < Model.Count; i++)
                                         {
-                                                <li>
-                                                    <img style="height:100px;width:120px" src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]" />
-                                                    <p style="text-align:center; color: #333">@Model[i]</p>
-                                                </li>
+                                            <li>
+                                                <img src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]" />
+                                                <p style="text-align:center; color: #333">@Model[i]</p>
+                                            </li>
                                         }
                                     </ul>
                                 </div>
-
                             </div>
                         </section>
                     </div>

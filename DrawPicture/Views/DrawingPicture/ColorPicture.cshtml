@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="~/css/templatemo_main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
-    <link rel="stylesheet" href="~/css/style.css">
     <style>
+        /* CSS giữ nguyên như cũ */
         body {
             background-image: url('/images/background/background1.jpg');
             background-size: cover;
@@ -95,46 +95,6 @@
             color: white;
             font-size: 14px;
         }
-
-        /* Responsive CSS */
-        @@media (max-width: 768px) {
-            .canvas-wrapper {
-                width: 100%;
-                margin: 0 auto;
-            }
-        }
-
-        #drawingCanvas {
-            width: 100%;
-            height: auto;
-        }
-
-        #control-panel {
-            flex-direction: column; /* Nút xếp dọc */
-            gap: 10px;
-        }
-
-            #control-panel button, #brush-type, #brush-size {
-                width: 100%; /* Chiếm toàn bộ chiều rộng */
-            }
-
-        .color-box {
-            width: 20px;
-            height: 20px;
-        }
-
-        }
-
-        @@media (max-width: 480px) {
-            .color-box {
-                width: 15px;
-                height: 15px;
-            }
-
-            #control-panel {
-                padding: 10px;
-            }
-        }
     </style>
 </head>
 
@@ -149,7 +109,6 @@
             <label for="brush-type">Chọn loại bút:</label>
             <select id="brush-type">
                 <option value="pencil" selected>Bút chì</option>
-                <option value="circle">Bút vòng tròn</option>
                 <option value="spray">Bút phun</option>
             </select>
 
@@ -175,11 +134,10 @@
                 <div class="color-box" style="background-color: grey;" data-color="grey"></div>
                 <div class="color-box" style="background-color: white;" data-color="white"></div>
             </div>
-
+            <button id="eraser">Tẩy</button>
             <button id="clear-canvas">Xóa</button>
             <button id="change-image">Chọn hình khác</button>
             <button id="save-image">Trưng bày tác phẩm</button>
-
         </div>
     </div>
 
@@ -188,42 +146,39 @@
             backgroundColor: 'white'
         });
 
-        // Hàm resize canvas
+        // Resize canvas
         function resizeCanvas() {
             const containerWidth = document.querySelector('.canvas-wrapper').clientWidth;
-            const aspectRatio = 4 / 3; // Tỉ lệ 4:3
-            const newWidth = Math.min(containerWidth, 1000); // Giới hạn kích thước tối đa
+            const aspectRatio = 4 / 3;
+            const newWidth = Math.min(containerWidth, 1000);
             const newHeight = newWidth / aspectRatio;
 
             canvas.setWidth(newWidth);
             canvas.setHeight(newHeight);
         }
 
-        // Gọi resize khi tải trang
         resizeCanvas();
-
-        // Lắng nghe thay đổi kích thước
         window.addEventListener('resize', resizeCanvas);
 
-        // Lấy URL hình ảnh từ localStorage
+        // Load image to center
         const selectedImage = localStorage.getItem('selectedImage');
-        console.log("selectedImage: "+selectedImage);
         if (selectedImage) {
-            // Thêm hình ảnh đã chọn lên canvas
             fabric.Image.fromURL(selectedImage, (img) => {
-                // Resize hình ảnh phù hợp với canvas
                 const scaleFactor = Math.min(canvas.width / img.width, canvas.height / img.height);
                 img.scale(scaleFactor);
 
-                // Thêm hình ảnh vào canvas
+                // Center image
+                img.set({
+                    left: (canvas.width - img.width * scaleFactor) / 2,
+                    top: (canvas.height - img.height * scaleFactor) / 2
+                });
+
                 canvas.add(img);
                 canvas.renderAll();
             });
         }
 
-        // Các tính năng khác (bút, màu, xóa) vẫn giữ nguyên...
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-        canvas.freeDrawingBrush.color = 'red';
         canvas.freeDrawingBrush.width = 10;
 
         const brushTypeSelect = document.getElementById('brush-type');
@@ -233,9 +188,6 @@
             switch (brushType) {
                 case 'pencil':
                     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
-                    break;
-                case 'circle':
-                    canvas.freeDrawingBrush = new fabric.CircleBrush(canvas);
                     break;
                 case 'spray':
                     canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
@@ -276,19 +228,43 @@
             canvas.clear();
             canvas.setBackgroundColor('white', canvas.renderAll.bind(canvas));
         });
+
+
+        // Variables
+        let isErasing = false;
+        let selectedColor = 'white';
+
+        // Enable Eraser
+        const eraserButton = document.getElementById('eraser');
+        eraserButton.addEventListener('click', () => {
+            isErasing = !isErasing;
+            console.log("isErasing: "+isErasing);
+            if (isErasing) {
+                canvas.freeDrawingBrush.color = 'white'; // Set eraser to white
+                canvas.defaultCursor = 'crosshair';
+                canvas.isDrawingMode = true;
+            }
+            else {
+                canvas.defaultCursor = 'crosshair';
+                canvas.freeDrawingBrush.color = selectedColor; // Restore brush color
+            }
+        });
+        // Fill Color Picker
+        const colorPicker = document.getElementById('color-picker');
+        colorPicker.addEventListener('input', (event) => {
+            selectedColor = event.target.value;
+            if (!isErasing) {
+                canvas.freeDrawingBrush.color = selectedColor;
+            }
+        });
     </script>
     <script>
-            const changeImageButton = document.getElementById('change-image');
-            changeImageButton.addEventListener('click', () => {
-                // Xóa hình ảnh đang hiển thị
-                canvas.clear();
-
-                // Xóa URL hình ảnh khỏi localStorage
-                localStorage.removeItem('selectedImage');
-
-                // Điều hướng quay lại TopicGallery
-                window.location.href = "/Topic/TopicGallery";
-            });
+        const changeImageButton = document.getElementById('change-image');
+        changeImageButton.addEventListener('click', () => {
+            canvas.clear();
+            localStorage.removeItem('selectedImage');
+            window.location.href = "/Topic/TopicGallery";
+        });
     </script>
     <script>
             document.getElementById('save-image').addEventListener('click', () => {
