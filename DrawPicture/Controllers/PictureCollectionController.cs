@@ -27,7 +27,7 @@ namespace DrawPicture.Controllers
 
         public IActionResult DisplayCollection()
         {
-            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureDrawn");
+            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureLibrary");
 
             if (!Directory.Exists(imageFolderPath))
             {

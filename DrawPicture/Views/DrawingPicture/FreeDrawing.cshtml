@@ -185,7 +185,8 @@
             </div>
             <button id="eraser">Tẩy</button>
             <button id="clear-canvas">Xóa</button>
-            <button id="save-image">Trưng bày tác phẩm</button>
+            <button id="save-image">Lưu tác phẩm</button>
+            <button id="image-library">Trưng bày tác phẩm</button>
         </div>
     </div>
 
@@ -255,6 +256,53 @@
             }
         });
 
+    </script>
+    <script>
+            document.getElementById('save-image').addEventListener('click', () => {
+                const canvasData = canvas.toDataURL('image/jpg');
+                    fetch('/api/ImagesApi/save-image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ imageData: canvasData })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Hình ảnh đã được lưu thành công');
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi lưu hình ảnh:', error);
+                        alert('Có lỗi xảy ra');
+                    });
+        });
+    </script>
+    <script>
+            document.getElementById('image-library').addEventListener('click', () => {
+
+            const isConfirmed = window.confirm("Em có muốn trưng bày tác phẩm của mình không?");
+
+            if(isConfirmed){
+                const canvasData = canvas.toDataURL('image/jpg');
+                    fetch('/api/ImagesApi/image-library', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ imageData: canvasData })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Hình ảnh đã được lưu thành công');
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi lưu hình ảnh:', error);
+                        alert('Có lỗi xảy ra');
+                    });
+            }else{
+
+            }
+        });
     </script>
 </body>
 
