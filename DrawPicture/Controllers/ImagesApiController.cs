@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DrawPicture.Data;
+using DrawPicture.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DrawPicture.Controllers
 {
@@ -6,6 +9,12 @@ namespace DrawPicture.Controllers
     [Route("api/[controller]")]
     public class ImagesApiController : Controller
     {
+        private readonly ApplicationDbContext _context;
+        public ImagesApiController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpPost("save-image")]
         public IActionResult SaveImage([FromBody] ImageRequest request)
         {
@@ -21,9 +30,15 @@ namespace DrawPicture.Controllers
 
                 var fileName = $"drawing_{DateTime.Now.Ticks}.jpg";
                 var filePath = Path.Combine(folderPath, fileName);
-
+                _context.Add( new DrawStudent()
+                {
+                    Picture = fileName,
+                    UserId = request.UserId,
+                    Status = request.Status,
+                    Name = request.Name,
+                });
                 System.IO.File.WriteAllBytes(filePath, imageData);
-
+                _context.SaveChanges();
                 return Ok(new { message = "Hình ảnh đã được lưu thành công", filePath });
             }
             catch (Exception ex)
@@ -50,6 +65,14 @@ namespace DrawPicture.Controllers
 
                 System.IO.File.WriteAllBytes(filePath, imageData);
 
+                _context.Add(new DrawStudent()
+                {
+                    Picture = fileName,
+                    UserId = request.UserId,
+                    Status = request.Status,
+                    Name = request.Name,
+                });
+                _context.SaveChanges();
                 return Ok(new { message = "Hình ảnh đã được lưu thành công", filePath });
             }
             catch (Exception ex)
@@ -60,6 +83,10 @@ namespace DrawPicture.Controllers
         public class ImageRequest
         {
             public string ImageData { get; set; }
+
+            public string UserId { get; set; }
+            public string Name { get; set; }
+            public bool Status { get; set; }
         }
     }
 }

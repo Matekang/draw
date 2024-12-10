@@ -1,0 +1,48 @@
+﻿@using DrawPicture.ViewModels;
+@model UpdateProfileViewModel
+
+
+@{
+    ViewData["Title"] = "";
+}
+<div class="background-image"></div>
+<div class="row d-flex align-items-center justify-content-center " style="margin-top:10%;">
+    <div class="col-md-4 card p-3">
+        <h2 class="text-center text-info">Thay đổi thông tin</h2>
+        @if (TempData["Message"] != null)
+        {
+            <div class="alert alert-@TempData["AlertType"]">
+                @TempData["Message"]
+            </div>
+        }
+        <form asp-action="EditProfile" method="post" asp-route-returnurl="@ViewData["ReturnUrl"]">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="mb-1">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-1">
+                <label asp-for="Class" class="control-label"></label>
+                <input asp-for="Class" class="form-control" />
+                <span asp-validation-for="Class" class="text-danger"></span>
+            </div>
+           
+            <div class="row">
+                <div class="col-8">
+                    
+                </div>
+                <div class="col-4">
+                    <input type="submit" value="Thay đổi thông tin" class="btn btn-primary btn-sm float-end" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -12,6 +12,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<AppDbContext>(
     options => options.UseSqlServer(connectionString));
 
+builder.Services.AddDbContext<ApplicationDbContext>(
+    options => options.UseSqlServer(connectionString));
+
 builder.Services.AddIdentity<AppUser, IdentityRole>(
     options =>
     {
@@ -21,7 +24,9 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequireLowercase = false;
     })
-    .AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
 
 
 var app = builder.Build();
@@ -44,5 +49,4 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
 app.Run();

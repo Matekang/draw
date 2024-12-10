@@ -56,6 +56,12 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
 
             if (result.Succeeded)
             {
+                string role = model.Username.EndsWith("@teacher") ? "Teacher" : "";
+                if(role == "Teacher")
+                {
+                    await userManager.AddToRoleAsync(user, role);
+                }
+
                 await signInManager.SignInAsync(user, false);
 
                 return RedirectToLocal(returnUrl);
@@ -80,5 +86,138 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
             ? Redirect(returnUrl)
             : RedirectToAction(nameof(HomeController.Index), nameof(HomeController));
     }
+
+    [HttpGet]
+    public async Task<IActionResult> EditProfile()
+    {
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var model = new UpdateProfileViewModel
+        {
+            Name = user.Name,
+            Class = user.Class,
+        };
+
+        return View(model);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> EditProfile(UpdateProfileViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+
+        user.Name = model.Name;
+        user.Class = model.Class;
+
+        if (user.Name != model.Name)
+        {
+            var setEmailResult = await userManager.SetEmailAsync(user, model.Name);
+            if (!setEmailResult.Succeeded)
+            {
+                foreach (var error in setEmailResult.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(model);
+            }
+        }
+
+        var result = await userManager.UpdateAsync(user);
+        if (result.Succeeded)
+        {
+            TempData["Message"] = "Cập nhật thông tin thành công.";
+            TempData["AlertType"] = "success";
+            return RedirectToAction("EditProfile");
+        }
+
+        foreach (var error in result.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
+
+        return View(model);
+    }
+
+
+    public IActionResult ChangePassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+
+        var changePasswordResult = await userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+        if (changePasswordResult.Succeeded)
+        {
+            await signInManager.RefreshSignInAsync(user);
+            TempData["Message"] = "Thay đổi mật khẩu thành công.";
+            TempData["AlertType"] = "success";
+            return RedirectToAction("ChangePassword");
+        }
+
+        foreach (var error in changePasswordResult.Errors)
+        {
+            ModelState.AddModelError("", error.Description);
+        }
+
+        return View(model);
+    }
+
+
+    [HttpGet]
+    public async Task<IActionResult> GetAllUsers(int page = 1, int pageSize = 10)
+    {
+        var users = userManager.Users.ToList();
+        var usersWithoutRoles = new List<AppUser>();
+
+        foreach (var user in users)
+        {
+            var roles = await userManager.GetRolesAsync(user);
+            if (roles == null || !roles.Any())
+            {
+                usersWithoutRoles.Add(user);
+            }
+        }
+
+        // Phân trang
+        var totalUsers = usersWithoutRoles.Count;
+        var pagedUsers = usersWithoutRoles
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        ViewBag.TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+        ViewBag.CurrentPage = page;
+
+        return View(pagedUsers); 
+    }
+
 }
 

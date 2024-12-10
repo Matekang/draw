@@ -4,12 +4,12 @@ namespace DrawPicture.Controllers
 {
     public class DrawingPictureController : Controller
     {
-        public IActionResult FreeDrawing()
+        public IActionResult ColorPicture()
         {
             return View();
         }
 
-        public IActionResult ColorPicture()
+        public IActionResult FreeDrawing()
         {
             return View();
         }
