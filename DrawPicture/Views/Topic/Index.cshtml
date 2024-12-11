@@ -72,26 +72,22 @@
         }
 
         #carousel .slides li {
-            display: flex;
-            flex-direction: column; /* Nội dung xếp dọc */
-            align-items: center; /* Căn giữa */
-            justify-content: center;
-            text-align: center;
-            height: 150px; /* Chiều cao giảm xuống */
+            display: flex; /* Kích hoạt Flexbox */
+            justify-content: center; /* Căn giữa theo chiều ngang */
+            align-items: center; /* Căn giữa theo chiều dọc */
+            height: 120px; /* Chiều cao mỗi mục */
+            margin: auto; /* Giữ khung căn giữa */
+            text-align: center; /* Văn bản ở giữa */
+            overflow: hidden; /* Ẩn phần dư nếu cần */
         }
 
         #carousel .slides img {
-            height: 80px; /* Hình ảnh nhỏ hơn */
-            width: auto; /* Đảm bảo tỷ lệ đúng */
-            object-fit: contain;
-            margin-bottom: 5px; /* Khoảng cách giữa ảnh và chữ */
+            max-height: 100px; /* Giữ hình ảnh không vượt quá chiều cao khung */
+            max-width: auto; /* Giữ hình ảnh không vượt quá chiều rộng khung */
+            /* object-fit: contain; */ /* Duy trì tỷ lệ hình ảnh */
+            text-align: center;
         }
 
-        #carousel .slides p {
-            font-size: 12px; /* Kích thước chữ nhỏ hơn */
-            margin: 0; /* Loại bỏ khoảng cách thừa */
-            color: #333; /* Màu chữ rõ nét hơn */
-        }
     </style>
 </head>
 <body>
@@ -119,17 +115,17 @@
                                         }
                                     </ul>
                                 </div>
-                                <div id="carousel" class="flexslider">
-                                    <ul class="slides">
-                                        @for (int i = 0; i < Model.Count; i++)
-                                        {
-                                            <li>
-                                                <img src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]" />
-                                                <p style="text-align:center; color: #333">@Model[i]</p>
-                                            </li>
-                                        }
-                                    </ul>
-                                </div>
+                                    <div id="carousel" class="flexslider">
+                                        <ul class="slides">
+                                            @for (int i = 0; i < Model.Count; i++)
+                                            {
+                                                <li>
+                                                    <img src="~/images/topic/@Model[i]/1.jpg" alt="chủ đề @Model[i]" />
+                                                    <p style="text-align:center; color: #333">@Model[i]</p>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
                             </div>
                         </section>
                     </div>
