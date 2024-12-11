@@ -48,6 +48,7 @@
             justify-content: center;
             position: relative;
             width: 100%;
+            overflow: hidden;
         }
 
         #control-panel {
@@ -65,20 +66,20 @@
             max-width: 800px;
         }
 
-            #control-panel button {
-                padding: 10px 20px;
-                font-size: 16px;
-                border-radius: 50px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
+        #control-panel button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 50px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
 
-                #control-panel button:hover {
-                    background-color: #45a049;
-                }
+        #control-panel button:hover {
+            background-color: #45a049;
+        }
 
         #brush-type, #brush-size {
             padding: 10px;
@@ -114,7 +115,7 @@
 <body>
     <div class="container">
         <div class="canvas-wrapper">
-            <canvas id="drawingCanvas" width="1000" height="800"></canvas>
+            <canvas id="drawingCanvas"></canvas>
         </div>
         <div id="control-panel">
             <button id="toggle-drawing">Bật/Tắt chế độ vẽ</button>
@@ -185,7 +186,9 @@
                 // Center image
                 img.set({
                     left: (canvas.width - img.width * scaleFactor) / 2,
-                    top: (canvas.height - img.height * scaleFactor) / 2
+                    top: (canvas.height - img.height * scaleFactor) / 2,
+                    selectable: false, // Không cho phép chọn
+                    evented: false     // Không cho phép xử lý sự kiện
                 });
 
                 canvas.add(img);
@@ -232,7 +235,7 @@
             });
         });
 
-                canvas.isDrawingMode = true;
+        canvas.isDrawingMode = true;
 
         // Xóa sự kiện cho nút bật/tắt chế độ vẽ
         const toggleButton = document.getElementById('toggle-drawing');

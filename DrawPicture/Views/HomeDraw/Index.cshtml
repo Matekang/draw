@@ -6,15 +6,23 @@
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 <style>
+
+    /* Container chứa button và label */
+    .image-button-container {
+        display: flex;
+        flex-direction: column; /* Đặt các phần tử theo chiều dọc */
+        justify-content: center; /* Căn giữa theo chiều dọc */
+        align-items: center; /* Căn giữa theo chiều ngang */
+    }
+
     /* Cập nhật kích thước của button */
     .image-button {
-        position: relative;
         border: none;
         background: none;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 250px; /* Kích thước button lớn hơn */
+        width: 310px; /* Kích thước button lớn hơn */
         height: 250px; /* Kích thước button lớn hơn */
         padding: 0; /* Loại bỏ padding mặc định của button */
         background-color: transparent; /* Không có nền mờ đen */
@@ -22,33 +30,41 @@
 
         /* Hình ảnh bên trong button */
         .image-button img {
-            width: 100%;
-            height: 100%;
+            width: 75%;
+            height: 75%;
             object-fit: cover; /* Giữ tỉ lệ ảnh */
             border-radius: 8px; /* Bo góc hình ảnh */
             background-color: transparent; /* Không có nền mờ đen */
         }
 
     /* Văn bản trong button */
-    .button-label {
+    .button-label_1 {
         position: absolute;
-        bottom: 60px; /* Căn dưới với khoảng cách 10px từ đáy */
-        left: 50%;
-        transform: translateX(-50%); /* Căn giữa theo chiều ngang */
-        color: white; /* Màu chữ */
-        font-size: 15px; /* Kích thước chữ */
+        margin-top: 50px; /* Khoảng cách giữa ảnh và label */
+        color: saddlebrown; /* Màu chữ */
+        font-size: 30px; /* Kích thước chữ */
         font-weight: bold;
-        border: 2px solid #FF5733; /* Màu khung */
         padding: 6px 12px; /* Khoảng cách giữa chữ và khung */
-        border-radius: 8px; /* Bo góc khung */
-        background-color: #FF5733; /* Màu nền của label */
         text-align: center;
     }
 
-    .menu-link {
-        text-decoration: none;
-        color: inherit;
+    .button-label {
+        margin-top: 10px; /* Khoảng cách giữa ảnh và label */
+        color: saddlebrown; /* Màu chữ */
+        font-size: 30px; /* Kích thước chữ */
+        font-weight: bold;
+        padding: 6px 12px; /* Khoảng cách giữa chữ và khung */
+        border: 2px solid white; /* Màu khung */
+        padding: 6px 12px; /* Khoảng cách giữa chữ và khung */
+        border-radius: 8px; /* Bo góc khung */
+        background-color: white; /* Màu nền của label */
+        text-align: center;
+    }
+
+    /* Đảm bảo rằng button và label căn giữa cùng nhau */
+    .d-flex {
         display: flex;
+        justify-content: center;
         align-items: center;
     }
 
@@ -81,37 +97,45 @@
 </div>
 <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
     <!-- Button Image 1 -->
-    <button class="image-button" onclick="window.location.href='/topic/index';">
-        <img src="~/images/pngegg.png" alt="Button 1">
-        <h2 class="button-label">Thực hành</h2>
-    </button>
+    <div class="image-button-container">
+        <button class="image-button" onclick="window.location.href='/topic/index';">
+            <img src="~/images/pngegg.png" alt="Button 1">
+            <h2 class="button-label_1">Thực hành</h2>
+        </button>
+    </div>
 </div>
 
 <div class="d-flex justify-content-center align-items-center" style="height: 50vh; gap: 20%;">
-
-    @if (User.IsInRole("Teacher")){
-        <!-- Button Image 1 -->
-        <button class="image-button" onclick="window.location.href='/Account/GetAllUsers';">
-            <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
-            <h2 class="button-label">Bộ sưu tập</h2>
-        </button>
-    }else
+    @if (User.IsInRole("Teacher"))
     {
         <!-- Button Image 1 -->
-        <button class="image-button" onclick="window.location.href='/PictureCollection/ShowMyPicture?userId=@userId';">
-            <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
-            <h2 class="button-label">Bộ sưu tập</h2>
-        </button>
+        <div class="image-button-container">
+            <button class="image-button" onclick="window.location.href='/Account/GetAllUsers';">
+                <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
+            </button>
+            <h2 class="button-label">Kho báu của em</h2>
+        </div>
+    }
+    else
+    {
+        <!-- Button Image 1 -->
+        <div class="image-button-container">
+            <button class="image-button" onclick="window.location.href='/PictureCollection/ShowMyPicture?userId=@userId';">
+                <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
+            </button>
+            <h2 class="button-label">Kho báu của em</h2>
+        </div>
     }
 
-
-
     <!-- Button Image 2 -->
-    <button class="image-button" onclick="window.location.href='/PictureCollection/DisplayCollection';">
-        <img src="~/images/4698571_frame_gallery_image_photo_iconfinder.svg" alt="Button 2">
-        <h2 class="button-label">Trưng bày</h2>
-    </button>
+    <div class="image-button-container">
+        <button class="image-button" onclick="window.location.href='/PictureCollection/DisplayCollection';">
+            <img src="~/images/4698571_frame_gallery_image_photo_iconfinder.svg" alt="Button 2">
+        </button>
+        <h2 class="button-label">Triển lãm</h2>
+    </div>
 </div>
+
 
 
 
