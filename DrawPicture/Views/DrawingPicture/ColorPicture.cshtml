@@ -146,6 +146,7 @@
                 <div class="color-box" style="background-color: grey;" data-color="grey"></div>
                 <div class="color-box" style="background-color: white;" data-color="white"></div>
             </div>
+            <button id="draw-line">Vẽ đường thẳng</button>
             <button id="eraser">Tẩy</button>
             <button id="clear-canvas">Xóa</button>
             <button id="change-image">Chọn hình khác</button>
@@ -230,11 +231,17 @@
             });
         });
 
+                canvas.isDrawingMode = true;
+
+        // Xóa sự kiện cho nút bật/tắt chế độ vẽ
         const toggleButton = document.getElementById('toggle-drawing');
-        toggleButton.addEventListener('click', () => {
-            canvas.isDrawingMode = !canvas.isDrawingMode;
-            toggleButton.textContent = canvas.isDrawingMode ? 'Tắt chế độ vẽ' : 'Bật chế độ vẽ';
-        });
+        toggleButton.style.display = 'none';
+
+        // const toggleButton = document.getElementById('toggle-drawing');
+        // toggleButton.addEventListener('click', () => {
+        //     canvas.isDrawingMode = !canvas.isDrawingMode;
+        //     toggleButton.textContent = canvas.isDrawingMode ? 'Tắt chế độ vẽ' : 'Bật chế độ vẽ';
+        // });
 
         const clearButton = document.getElementById('clear-canvas');
         clearButton.addEventListener('click', () => {
@@ -325,6 +332,56 @@
 
             }
         });
+    </script>
+    <script>
+        let isDrawingLine = false; // Biến để kiểm tra trạng thái vẽ đường thẳng
+        let line, startX, startY;
+
+        const drawLineButton = document.getElementById('draw-line');
+
+                drawLineButton.addEventListener('click', () => {
+            isDrawingLine = !isDrawingLine;
+
+            if (isDrawingLine) {
+                canvas.isDrawingMode = false;
+                drawLineButton.textContent = "Thoát chế độ vẽ đường thẳng";
+            } else {
+                canvas.isDrawingMode = true;
+                drawLineButton.textContent = "Vẽ đường thẳng";
+            }
+        });
+
+        canvas.on('mouse:down', (event) => {
+            if (isDrawingLine) {
+                const pointer = canvas.getPointer(event.e);
+                startX = pointer.x;
+                startY = pointer.y;
+
+                // Tạo đường thẳng tạm thời
+                line = new fabric.Line([startX, startY, startX, startY], {
+                    stroke: canvas.freeDrawingBrush.color || 'black', // Màu vẽ
+                    strokeWidth: canvas.freeDrawingBrush.width || 5, // Độ dày
+                    selectable: false, // Không cho phép chọn
+                });
+                canvas.add(line);
+            }
+        });
+
+        canvas.on('mouse:move', (event) => {
+            if (isDrawingLine && line) {
+                const pointer = canvas.getPointer(event.e);
+                line.set({ x2: pointer.x, y2: pointer.y }); // Cập nhật điểm cuối
+                canvas.renderAll();
+            }
+        });
+
+        canvas.on('mouse:up', () => {
+            if (isDrawingLine && line) {
+                line.setCoords(); // Cập nhật tọa độ sau khi vẽ xong
+                line = null; // Đặt lại biến
+            }
+        });
+
     </script>
 </body>
 
