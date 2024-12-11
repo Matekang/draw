@@ -1,26 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DrawPicture.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DrawPicture.Controllers
 {
     public class TopicController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+        public TopicController(ApplicationDbContext context)
         {
-            // Đường dẫn đến thư mục 'topic'
-            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "topic");
+            _context = context;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var items = await _context.Pictures.Where(i => i.Folder == null).ToListAsync();
 
-            // Kiểm tra xem thư mục có tồn tại không
-            if (!Directory.Exists(imageFolderPath))
-            {
-                return View(new List<string>()); // Trả về danh sách rỗng nếu thư mục không tồn tại
-            }
-
-            // Lấy danh sách các thư mục con (folders)
-            var directories = Directory.GetDirectories(imageFolderPath)
-                                       .Select(folder => $"{Path.GetFileName(folder)}") // Chỉ lấy tên thư mục
-                                       .ToList();
-
-            return View(directories);
+            return View(items);
         }
 
         public IActionResult Selection()
@@ -42,7 +37,7 @@ namespace DrawPicture.Controllers
             return View(directories);
         }
 
-        public IActionResult TopicGallery(string topic)
+        public IActionResult TopicGallery(string topic , string name)
         {
             if (string.IsNullOrEmpty(topic))
             {
@@ -58,6 +53,7 @@ namespace DrawPicture.Controllers
                 : new List<string>();
 
             ViewBag.Topic = topic;
+            ViewBag.Name = name;
             return View(images); // Truyền danh sách ảnh vào View
         }
 

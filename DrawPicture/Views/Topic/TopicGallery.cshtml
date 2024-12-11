@@ -7,7 +7,7 @@
 <html class="no-js">
 <head>
     <meta charset="utf-8">
-    <title>Hình ảnh chủ đề @ViewBag.Topic</title>
+    <title>Hình ảnh chủ đề @ViewBag.Name</title>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="~/css/templatemo_main.css">
     <style>
@@ -37,7 +37,7 @@
     </style>
 </head>
 <body>
-    <h1 style="text-align: center;">Hình ảnh chủ đề: @ViewBag.Topic</h1>
+    <h1 style="text-align: center;">Hình ảnh @ViewBag.Name</h1>
     <a href="/Topic/Index" class="back-button">Quay lại</a>
     <div class="image-grid">
         @foreach (var image in Model)

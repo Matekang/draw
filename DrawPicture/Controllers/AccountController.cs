@@ -1,5 +1,6 @@
 ﻿using DrawPicture.Models;
 using DrawPicture.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -190,7 +191,7 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
         return View(model);
     }
 
-
+    [Authorize(Roles = "Teacher")]
     [HttpGet]
     public async Task<IActionResult> GetAllUsers(int page = 1, int pageSize = 10)
     {

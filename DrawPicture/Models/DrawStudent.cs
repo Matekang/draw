@@ -8,5 +8,6 @@
         public string Name { get; set; }
         public int Like { get; set; }
         public bool Status { get; set; }
+        public string Class { get; set; }
     }
 }

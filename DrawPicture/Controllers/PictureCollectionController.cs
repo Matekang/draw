@@ -1,48 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DrawPicture.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DrawPicture.Controllers
 {
     public class PictureCollectionController : Controller
     {
-        public IActionResult ShowMyPicture()
+        private readonly ApplicationDbContext _context;
+        public PictureCollectionController(ApplicationDbContext context)
         {
-            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureDrawn");
-
-            if (!Directory.Exists(imageFolderPath))
-            {
-                return View(new List<string>());
-            }
-
-            var imageFiles = Directory.GetFiles(imageFolderPath)
-                                       .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                                      file.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                                      file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                                                      file.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
-                                       .Select(file => Path.GetFileName(file))
-                                       .ToList();
-
-            return View(imageFiles);
+            _context = context;
         }
 
-
-        public IActionResult DisplayCollection()
+        public async Task<IActionResult> ShowMyPicture(string userId)
         {
-            var imageFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureLibrary");
-
-            if (!Directory.Exists(imageFolderPath))
+            if (string.IsNullOrEmpty(userId))
             {
-                return View(new List<string>());
+                return BadRequest("UserId không hợp lệ.");
             }
 
-            var imageFiles = Directory.GetFiles(imageFolderPath)
-                                       .Where(file => file.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
-                                                      file.EndsWith(".png", StringComparison.OrdinalIgnoreCase) ||
-                                                      file.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase) ||
-                                                      file.EndsWith(".gif", StringComparison.OrdinalIgnoreCase))
-                                       .Select(file => Path.GetFileName(file))
-                                       .ToList();
+            var items = await _context.DrawStudents
+                                      .Where(i => i.UserId == userId && i.Status == false)
+                                      .ToListAsync();
 
-            return View(imageFiles);
+            if (items == null || !items.Any())
+            {
+                return NotFound("Không có hình ảnh nào phù hợp với yêu cầu.");
+            }
+
+            return View(items);
+        }
+
+        public async Task<IActionResult> DisplayCollection()
+        {
+            var items =await _context.DrawStudents.Where(i => i.Status == true).ToListAsync();
+
+            return View(items);
         }
     }
 }

@@ -1,4 +1,11 @@
-﻿<style>
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
+@inject UserManager<AppUser> userManager
+@{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+<style>
     /* Cập nhật kích thước của button */
     .image-button {
         position: relative;
@@ -81,11 +88,22 @@
 </div>
 
 <div class="d-flex justify-content-center align-items-center" style="height: 50vh; gap: 20%;">
-    <!-- Button Image 1 -->
-    <button class="image-button" onclick="window.location.href='/PictureCollection/ShowMyPicture';">
-        <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
-        <h2 class="button-label">Bộ sưu tập</h2>
-    </button>
+
+    @if (User.IsInRole("Teacher")){
+        <!-- Button Image 1 -->
+        <button class="image-button" onclick="window.location.href='/Account/GetAllUsers';">
+            <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
+            <h2 class="button-label">Bộ sưu tập</h2>
+        </button>
+    }else
+    {
+        <!-- Button Image 1 -->
+        <button class="image-button" onclick="window.location.href='/PictureCollection/ShowMyPicture?userId=@userId';">
+            <img src="~/images/8962554_treasure_chest_gold_money_iconfinder.svg" alt="Button 1">
+            <h2 class="button-label">Bộ sưu tập</h2>
+        </button>
+    }
+
 
 
     <!-- Button Image 2 -->

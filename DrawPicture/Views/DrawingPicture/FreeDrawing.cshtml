@@ -8,6 +8,7 @@
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
     var user = await userManager.GetUserAsync(User);
     var name = @user.Name;
+    var userClass = @user.Class;
     Layout = null;
 }
 <!DOCTYPE html>
@@ -282,7 +283,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                body: JSON.stringify({ imageData: canvasData, userId: "@userId", status: false , name: "@name" })
+                body: JSON.stringify({ imageData: canvasData, userId: "@userId", status: true, name: "@name", class: "@userClass" })
                     })
                     .then(response => response.json())
                     .then(data => {
@@ -306,7 +307,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                    body: JSON.stringify({ imageData: canvasData, userId: "@userId", status: true , name: "@name" })
+                    body: JSON.stringify({ imageData: canvasData, userId: "@userId", status: true, name: "@name", class: "@userClass" })
                     })
                     .then(response => response.json())
                     .then(data => {

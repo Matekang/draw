@@ -2,6 +2,7 @@
 using DrawPicture.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace DrawPicture.Controllers
 {
@@ -21,7 +22,7 @@ namespace DrawPicture.Controllers
             try
             {
                 var imageData = Convert.FromBase64String(request.ImageData.Split(',')[1]);
-
+                var originalName = WebUtility.HtmlDecode(request.Name);
                 var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureDrawn");
                 if (!Directory.Exists(folderPath))
                 {
@@ -35,7 +36,8 @@ namespace DrawPicture.Controllers
                     Picture = fileName,
                     UserId = request.UserId,
                     Status = request.Status,
-                    Name = request.Name,
+                    Name = originalName,
+                    Class = request.Class,
                 });
                 System.IO.File.WriteAllBytes(filePath, imageData);
                 _context.SaveChanges();
@@ -53,7 +55,7 @@ namespace DrawPicture.Controllers
             try
             {
                 var imageData = Convert.FromBase64String(request.ImageData.Split(',')[1]);
-
+                var originalName = WebUtility.HtmlDecode(request.Name);
                 var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "pictureLibrary");
                 if (!Directory.Exists(folderPath))
                 {
@@ -70,7 +72,8 @@ namespace DrawPicture.Controllers
                     Picture = fileName,
                     UserId = request.UserId,
                     Status = request.Status,
-                    Name = request.Name,
+                    Name = originalName,
+                    Class = request.Class,
                 });
                 _context.SaveChanges();
                 return Ok(new { message = "Hình ảnh đã được lưu thành công", filePath });
@@ -83,10 +86,10 @@ namespace DrawPicture.Controllers
         public class ImageRequest
         {
             public string ImageData { get; set; }
-
             public string UserId { get; set; }
             public string Name { get; set; }
             public bool Status { get; set; }
+            public string Class { get; set; }
         }
     }
 }
