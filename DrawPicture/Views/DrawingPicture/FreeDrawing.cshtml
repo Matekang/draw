@@ -3,7 +3,6 @@
 
 @inject UserManager<AppUser> userManager
 
-
 @{
     var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
     var user = await userManager.GetUserAsync(User);
@@ -29,28 +28,51 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
         }
 
-        .canvas-container {
-            margin: 20px auto;
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 15px;
+            box-sizing: border-box;
+            gap: 20px;
+        }
+
+        .canvas-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            overflow-x: auto; /* Thêm thanh cuộn ngang khi cần */
+            padding: 10px 0;
+        }
+
+        #drawingCanvas {
+            width: 1000px; /* Chiều rộng cố định của canvas */
+            height: auto; /* Tự động điều chỉnh chiều cao */
             border: 2px solid #ccc;
-            background-color: white;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: white;
+            cursor: crosshair;
         }
 
         #control-panel {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            align-items: center;
             gap: 15px;
             padding: 15px;
             background-color: #3c3c3c;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             max-width: 800px;
             width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
             #control-panel button,
@@ -73,71 +95,6 @@
                     background-color: #45a049;
                 }
 
-        #drawingCanvas {
-            border: 1px solid #ccc;
-            cursor: crosshair;
-        }
-
-        .canvas-container {
-            margin: 20px auto;
-            border: 2px solid #ccc;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .canvas-wrapper {
-            display: flex;
-            justify-content: center;
-            position: relative;
-            width: 100%;
-        }
-
-        #control-panel {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            padding: 15px;
-            background-color: #3c3c3c;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-            width: 100%;
-            max-width: 800px;
-        }
-
-            #control-panel button {
-                padding: 10px 20px;
-                font-size: 16px;
-                border-radius: 50px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            }
-
-                #control-panel button:hover {
-                    background-color: #45a049;
-                }
-
-        #brush-type, #brush-size {
-            padding: 10px;
-            font-size: 14px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-            background-color: white;
-            color: #333;
-        }
-
         #color-picker {
             display: flex;
             gap: 10px;
@@ -157,30 +114,114 @@
             color: white;
             font-size: 14px;
         }
+
+        /* Thanh cuộn ngang cho content-box */
+        #content-box {
+            width: 100%;
+            overflow-x: auto; /* Thêm thanh cuộn ngang nếu nội dung vượt quá chiều rộng */
+            margin-bottom: 10px;
+        }
+
+        #content-display {
+            display: inline-block;
+            padding: 10px;
+            background-color: white;
+            color: black;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Thanh cuộn ngang dưới canvas */
+        .canvas-scroll-wrapper {
+            width: 100%;
+            overflow-x: auto; /* Cho phép cuộn ngang */
+            padding: 10px 0;
+            margin-top: 10px;
+        }
+
+            /* Thanh cuộn ngang */
+            .canvas-scroll-wrapper::-webkit-scrollbar {
+                height: 12px; /* Điều chỉnh độ cao của thanh cuộn */
+            }
+
+            .canvas-scroll-wrapper::-webkit-scrollbar-thumb {
+                background-color: #888;
+                border-radius: 6px;
+            }
+
+                .canvas-scroll-wrapper::-webkit-scrollbar-thumb:hover {
+                    background-color: #555;
+                }
+
+        /* Responsive styles for smaller screens */
+        @@media (max-width: 768px) {
+            #drawingCanvas
+
+        {
+            width: 90%; /* Canvas chiếm gần hết chiều rộng màn hình */
+            max-width: 1000px;
+        }
+
+        #control-panel {
+            flex-direction: column;
+            gap: 10px;
+        }
+
+            #control-panel button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+        }
+
+        @@media (max-width: 480px) {
+            #drawingCanvas
+
+        {
+            width: 100%; /* Canvas tự động giãn tối đa */
+        }
+
+        #control-panel button {
+            font-size: 10px;
+            padding: 6px 10px;
+        }
+
+        .color-box {
+            width: 25px;
+            height: 25px;
+        }
+
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="canvas-wrapper">
-            <canvas id="drawingCanvas" width="1000" height="800"></canvas>
+        <div id="content-box">
+            <pre id="content-display">
+                @ViewBag.Content
+            </pre>
         </div>
+
+        <div class="canvas-scroll-wrapper">
+            <div class="canvas-wrapper">
+                <canvas id="drawingCanvas" width="1000" height="800"></canvas>
+            </div>
+        </div>
+
         <div id="control-panel">
             <button id="toggle-drawing">Bật/Tắt chế độ vẽ</button>
-
             <label for="brush-type">Chọn loại bút:</label>
             <select id="brush-type">
                 <option value="pencil" selected>Bút chì</option>
                 <option value="spray">Bút phun</option>
             </select>
-
             <label for="brush-size">Chọn kích thước bút:</label>
             <select id="brush-size">
                 <option value="5">Nhỏ</option>
                 <option value="10" selected>Vừa</option>
                 <option value="20">Lớn</option>
             </select>
-
             <label>Chọn màu:</label>
             <div id="color-picker">
                 <div class="color-box" style="background-color: pink;" data-color="pink"></div>
@@ -203,7 +244,6 @@
             <button id="image-library">Trưng bày tác phẩm</button>
         </div>
     </div>
-
     <script>
         const canvas = new fabric.Canvas('drawingCanvas', {
             backgroundColor: 'white'

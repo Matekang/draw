@@ -102,8 +102,9 @@
                                 <div class="header-container">
                                     <h2>THƯ VIỆN CHỦ ĐỀ</h2>
                                     <div class="button-container">
+                                        <a href="/HomeDraw/Index" class="round-btn left-btn">Quay lại</a>
                                         <a href="#" class="round-btn left-btn" onclick="navigateActiveTopic()">Bé tập tô</a>
-                                        <a href="/DrawingPicture/FreeDrawing" class="round-btn right-btn">Vẽ theo miêu tả</a>
+                                        <a href="#" onclick="navigateActiveTopic2()" class="round-btn right-btn">Vẽ theo miêu tả</a>
                                     </div>
                                 </div>
                                 <div id="slider" class="flexslider">
@@ -111,7 +112,7 @@
                                         @foreach (var i in Model)
                                         {
                                             <li>
-                                                <img src="~/images/topic/@i.FolderName/1.jpg" alt="@i.FolderName]" />
+                                                <img src="~/images/topic/@i.FolderName/1.jpg" alt="@i.FolderName" />
                                             </li>
                                         }
                                     </ul>
@@ -153,6 +154,25 @@
                 if (topic) {
                     // Điều hướng đến trang chủ đề với các tham số chính xác
                     window.location.href = `/Topic/TopicGallery?topic=${encodeURIComponent(topic)}&name=${encodeURIComponent(name)}`;
+                }
+            });
+        }
+    </script>
+
+    <script>
+        function navigateActiveTopic2() {
+            // Tìm thẻ có class "flex-active-slide"
+            const activeSlides = document.querySelectorAll('.flex-active-slide');
+
+            activeSlides.forEach(slide => {
+                // Lấy nội dung từ thẻ <p> hoặc giá trị "alt" của ảnh
+                const topic = slide.querySelector('img')?.alt;
+
+                const name = slide.querySelector('p')?.innerText;
+
+                if (topic) {
+                    // Điều hướng đến trang chủ đề với các tham số chính xác
+                    window.location.href = `/DrawingPicture/FreeDrawing?topic=${topic}`;
                 }
             });
         }
