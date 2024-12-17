@@ -68,6 +68,9 @@
         align-items: center;
     }
 
+    a {
+        text-decoration: none;
+    }
 </style>
 
 <div class="background-image"></div>
@@ -77,10 +80,6 @@
 
     <!-- Danh sách mục -->
     <div class="menu-options" id="menuOptions">
-        <div class="menu-option">
-            <i class="fas fa-volume-up"></i>
-            <span>Âm lượng</span>
-        </div>
         <a href="/account/editprofile" class="menu-link">
             <div class="menu-option">
                 <i class="fas fa-user"></i>
@@ -93,6 +92,13 @@
                 <span>Bảo mật</span>
             </div>
         </a>
+        <a href="#" onclick="document.getElementById('logoutForm').submit();">
+            <div class="menu-option">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+            </div>
+        </a>
+        <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" style="display:none;"></form>
     </div>
 </div>
 <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">

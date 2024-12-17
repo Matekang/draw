@@ -4,6 +4,10 @@ namespace DrawPicture.ViewModels
 {
     public class UpdateProfileViewModel
     {
+        [Required(ErrorMessage = "Vui lòng nhập tài khoản.")]
+        [Display(Name = "Tài khoản")]
+        public string User { get; set; }
+
         [Required(ErrorMessage = "Vui lòng nhập tên.")]
         [Display(Name = "Họ và tên")]
         public string Name { get; set; }

@@ -78,7 +78,7 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
     public async Task<IActionResult> Logout()
     {
         await signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        return RedirectToAction("Login", "Account");
     }
 
     private IActionResult RedirectToLocal(string? returnUrl)
@@ -101,6 +101,7 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
         {
             Name = user.Name,
             Class = user.Class,
+            User = user.UserName,
         };
 
         return View(model);
@@ -124,6 +125,7 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
 
         user.Name = model.Name;
         user.Class = model.Class;
+        user.UserName = model.User;
 
         if (user.Name != model.Name)
         {

@@ -18,6 +18,11 @@
         <form asp-action="EditProfile" method="post" asp-route-returnurl="@ViewData["ReturnUrl"]">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="mb-1">
+                <label asp-for="User" class="control-label"></label>
+                <input asp-for="User" class="form-control" />
+                <span asp-validation-for="User" class="text-danger"></span>
+            </div>
+            <div class="mb-1">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
