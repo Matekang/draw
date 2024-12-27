@@ -197,7 +197,9 @@ public class AccountController(SignInManager<AppUser> signInManager, UserManager
     [HttpGet]
     public async Task<IActionResult> GetAllUsers(int page = 1, int pageSize = 10)
     {
-        var users = userManager.Users.ToList();
+        var userDetail = await userManager.GetUserAsync(User);
+        var users = userManager.Users.Where(i => i.Class == userDetail.Class).ToList();
+
         var usersWithoutRoles = new List<AppUser>();
 
         foreach (var user in users)

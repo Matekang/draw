@@ -1,10 +1,17 @@
 ﻿@model IEnumerable<DrawStudent>
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+
+@inject UserManager<AppUser> userManager
+
+@{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
 
 @{
     Layout = null;
 }
 <!DOCTYPE html>
-
 <html class="no-js">
 
 <head>
@@ -17,16 +24,29 @@
     <link rel="stylesheet" href="~/css/normalize.css">
     <link rel="stylesheet" href="~/css/templatemo-style.css">
     <script src="~/js/modernizr-2.6.2.min.js"></script>
-    <!--
-    Masonry Template
-    http://www.templatemo.com/preview/templatemo_434_masonry
-    -->
-</head>
-<body>
-    <!--[if lt IE 7]>
-        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
+    <style>
+        .btn-like {
+            background-color: transparent;
+            border: none;
+            color: #ff4b5c; /* Màu trái tim */
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
 
+            .btn-like:hover {
+                transform: scale(1.2);
+            }
+
+            .btn-like:disabled {
+                color: gray;
+                cursor: not-allowed;
+            }
+    </style>
+
+</head>
+
+<body>
     <div id="loader-wrapper">
         <div id="loader"></div>
     </div>
@@ -41,12 +61,12 @@
             text-align: center;">
             Trưng bày
         </h1>
-    </div> 
+    </div>
     <div class="main-posts">
         <div class="container">
             <div class="row">
                 <div class="blog-masonry masonry-true">
-                    @foreach(var i in Model)
+                    @foreach (var i in Model)
                     {
                         <div class="post-masonry col-md-4 col-sm-6">
                             <div class="post-thumb">
@@ -57,7 +77,11 @@
                                 <div class="post-hover text-center">
                                     <div class="inside">
                                         <h4>@i.Name</h4>
-                                        <p>Lớp : @i.Class </p>
+                                        <p>Lớp : @i.Class</p>
+                                        <!-- Truyền i.Id vào hàm -->
+                                            <button id="like-button-@i.Id" onclick="likePost('@i.Id')" class="btn btn-like">
+                                                @i.Like ❤️
+                                            </button>
                                     </div>
                                 </div>
                             </div>
@@ -68,21 +92,43 @@
         </div>
     </div>
 
+    <!-- JavaScript -->
+    <script>
+        const userId = '@userId'; // Render Razor userId phía server
+        async function likePost(drawId) {
+            try {
+                const response = await fetch(`/api/ImagesApi/like?userId=${userId}&drawId=${drawId}`, {
+                    method: 'POST'
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    document.getElementById("like-button-" + drawId).disabled = true;
+                } else {
+                    alert(result.message);
+                    document.getElementById("like-button-" + drawId).disabled = true;
+                }
+            } catch (error) {
+                console.error("Error liking post:", error);
+                alert("Có lỗi xảy ra!");
+            }
+        }
+    </script>
+
+    <!-- Các script khác -->
     <script src="~/js/jquery-1.10.2.min.js"></script>
     <script src="~/js/plugins.min.js"></script>
     <script src="~/js/main.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <!-- Preloader -->
     <script type="text/javascript">
-        //<![CDATA[
-        $(window).load(function () { // makes sure the whole site is loaded
-            $('#loader').fadeOut(); // will first fade out the loading animation
-            $('#loader-wrapper').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
+        $(window).load(function () {
+            $('#loader').fadeOut();
+            $('#loader-wrapper').delay(350).fadeOut('slow');
             $('body').delay(350).css({ 'overflow-y': 'visible' });
-        })
-        //]]>
+        });
     </script>
-    <!-- templatemo 434 masonry -->
 </body>
 </html>
