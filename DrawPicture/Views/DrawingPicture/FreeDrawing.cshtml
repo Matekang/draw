@@ -17,7 +17,6 @@
     <meta charset="utf-8">
     <title>Các chủ đề</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="~/css/templatemo_main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
     <style>
         body {
@@ -223,24 +222,29 @@
                 <option value="10" selected>Vừa</option>
                 <option value="20">Lớn</option>
             </select>
-            <label>Chọn màu:</label>
+            <input type="range" id="brush-opacity" min="-20" max="0" step="1" value="0">
             <div id="color-picker">
-                <div class="color-box" style="background-color: pink;" data-color="pink"></div>
-                <div class="color-box" style="background-color: red;" data-color="red"></div>
-                <div class="color-box" style="background-color: orange;" data-color="orange"></div>
-                <div class="color-box" style="background-color: yellow;" data-color="yellow"></div>
-                <div class="color-box" style="background-color: navy;" data-color="navy"></div>
-                <div class="color-box" style="background-color: purple;" data-color="purple"></div>
-                <div class="color-box" style="background-color: deepskyblue;" data-color="deepskyblue"></div>
-                <div class="color-box" style="background-color: lawngreen;" data-color="lawngreen"></div>
-                <div class="color-box" style="background-color: black;" data-color="black"></div>
-                <div class="color-box" style="background-color: brown;" data-color="brown"></div>
-                <div class="color-box" style="background-color: grey;" data-color="grey"></div>
-                <div class="color-box" style="background-color: white;" data-color="white"></div>
+                <div class="color-box" style="background-color: rgb(255, 0, 0);" data-color="rgb(255, 0, 0)"></div>
+                <div class="color-box" style="background-color: rgb(255, 165, 0);" data-color="rgb(255, 165, 0)"></div>
+                <div class="color-box" style="background-color: rgb(255, 255, 0);" data-color="rgb(255, 255, 0)"></div>
+                <div class="color-box" style="background-color: rgb(0, 128, 0);" data-color="rgb(0, 128, 0)"></div>
+                <div class="color-box" style="background-color: rgb(0, 0, 255);" data-color="rgb(0, 0, 255)"></div>
+                <div class="color-box" style="background-color: rgb(128, 0, 128);" data-color="rgb(128, 0, 128)"></div>
+                <div class="color-box" style="background-color: rgb(255, 192, 203);" data-color="rgb(255, 192, 203)"></div>
+                <div class="color-box" style="background-color: rgb(165, 42, 42);" data-color="rgb(165, 42, 42)"></div>
+                <div class="color-box" style="background-color: rgb(0, 0, 0);" data-color="rgb(0, 0, 0)"></div>
+                <div class="color-box" style="background-color: rgb(255, 255, 255);" data-color="rgb(255, 255, 255)"></div>
+                <div class="color-box" style="background-color: rgb(128, 128, 128);" data-color="rgb(128, 128, 128)"></div>
+                <div class="color-box" style="background-color: rgb(135, 206, 235);" data-color="rgb(135, 206, 235)"></div>
+                <div class="color-box" style="background-color: rgb(144, 238, 144);" data-color="rgb(144, 238, 144)"></div>
+                <div class="color-box" style="background-color: rgb(255, 255, 224);" data-color="rgb(255, 255, 224)"></div>
+                <div class="color-box" style="background-color: rgb(255, 228, 181);" data-color="rgb(255, 228, 181)"></div>
+                <div class="color-box" style="background-color: rgb(255, 182, 193);" data-color="rgb(255, 182, 193)"></div>
+                <div class="color-box" style="background-color: rgb(216, 191, 216);" data-color="rgb(216, 191, 216)"></div>
+                <div class="color-box" style="background-color: rgb(210, 180, 140);" data-color="rgb(210, 180, 140)"></div>
             </div>
             <button id="draw-line">Vẽ đường thẳng</button>
             <button id="eraser">Tẩy</button>
-            <button id="clear-canvas">Xóa</button>
             <button id="save-image">Lưu tác phẩm</button>
             <button id="image-library">Trưng bày tác phẩm</button>
         </div>
@@ -252,16 +256,36 @@
 
         canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
         canvas.freeDrawingBrush.width = 10;
+        canvas.freeDrawingBrush.opacity = 1;
+        let selectedColor = 'rgb(255, 255, 255)';
+
 
         const colorBoxes = document.querySelectorAll('.color-box');
         colorBoxes.forEach(box => {
             box.addEventListener('click', () => {
                 const color = box.getAttribute('data-color');
                 canvas.freeDrawingBrush.color = color;
+                selectedColor = color;
 
                 colorBoxes.forEach(box => box.classList.remove('active'));
                 box.classList.add('active');
             });
+        });
+        const brushTypeSelect = document.getElementById('brush-type');
+        brushTypeSelect.addEventListener('change', (event) => {
+            const brushType = event.target.value;
+
+            switch (brushType) {
+                case 'pencil':
+                    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+                    break;
+                case 'spray':
+                    canvas.freeDrawingBrush = new fabric.SprayBrush(canvas);
+                    break;
+                default:
+                    canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
+            }
+            canvas.freeDrawingBrush.width = parseInt(document.getElementById('brush-size').value, 10);
         });
 
         const brushSizeSelect = document.getElementById('brush-size');
@@ -269,26 +293,32 @@
             canvas.freeDrawingBrush.width = parseInt(event.target.value, 10);
         });
 
-        const clearButton = document.getElementById('clear-canvas');
-        clearButton.addEventListener('click', () => {
-            canvas.clear();
-            canvas.setBackgroundColor('white', canvas.renderAll.bind(canvas));
-        });
-
         // Variables
         let isErasing = false;
-        let selectedColor = 'white';
-
         canvas.isDrawingMode = true;
         // Xóa sự kiện cho nút bật/tắt chế độ vẽ
-        const toggleButton = document.getElementById('toggle-drawing');
-        toggleButton.style.display = 'none';
-        // // Toggle Drawing Mode
         // const toggleButton = document.getElementById('toggle-drawing');
-        // toggleButton.addEventListener('click', () => {
-        //     canvas.isDrawingMode = !canvas.isDrawingMode;
-        //     toggleButton.textContent = canvas.isDrawingMode ? 'Tắt chế độ vẽ' : 'Bật chế độ vẽ';
-        // });
+        // toggleButton.style.display = 'none';
+        // Toggle Drawing Mode
+        const toggleButton = document.getElementById('toggle-drawing');
+        toggleButton.addEventListener('click', () => {
+            canvas.isDrawingMode = !canvas.isDrawingMode;
+            toggleButton.textContent = canvas.isDrawingMode ? 'Tắt chế độ vẽ' : 'Bật chế độ vẽ';
+
+            if (canvas.isDrawingMode) {
+                // Bật chọn đối tượng khi vẽ
+                canvas.selection = true;
+                canvas.forEachObject((obj) => {
+                    obj.selectable = true;  // Cho phép chọn đối tượng
+                });
+            } else {
+                // Tắt chọn đối tượng khi không vẽ
+                canvas.selection = false;
+                canvas.forEachObject((obj) => {
+                    obj.selectable = false; // Ngừng cho phép chọn đối tượng
+                });
+            }
+        });
 
         // Enable Eraser
         const eraserButton = document.getElementById('eraser');
@@ -296,7 +326,7 @@
             isErasing = !isErasing;
             console.log("isErasing: "+isErasing);
             if (isErasing) {
-                canvas.freeDrawingBrush.color = 'white'; // Set eraser to white
+                canvas.freeDrawingBrush.color = 'rgb(255, 255, 255)'; // Set eraser to white
                 canvas.defaultCursor = 'crosshair';
                 canvas.isDrawingMode = true;
             }
@@ -313,6 +343,32 @@
             if (!isErasing) {
                 canvas.freeDrawingBrush.color = selectedColor;
             }
+        });
+
+                function adjustColorBrightness(color, strength) {
+            const rgbValues = color.match(/\d+/g);
+            console.log("rgbValues: "+ rgbValues);
+            // Tính hệ số điều chỉnh độ sáng
+            let factor = (100 + strength) / 100;  // Giảm độ sáng theo phần trăm
+            console.log("factor: "+ factor);
+            // Điều chỉnh giá trị màu RGB sao cho nó không mất quá nhanh màu sắc
+            let r = Math.round(rgbValues[0] * factor);
+            let g = Math.round(rgbValues[1] * factor);
+            let b = Math.round(rgbValues[2] * factor);
+
+            return `rgb(${r}, ${g}, ${b})`;  // Trả về màu RGB đã thay đổi
+        }
+
+        // Cập nhật độ đậm nhạt
+        const opacitySlider = document.getElementById('brush-opacity');
+
+        opacitySlider.addEventListener('input', (event) => {
+            const brightness = parseFloat(event.target.value);
+            console.log("brightness: " +brightness);
+            console.log("selectedColor: " +selectedColor);
+            const newColor = adjustColorBrightness(selectedColor, brightness); // Làm sáng/tối màu theo độ sáng
+            canvas.freeDrawingBrush.color = newColor;
+            console.log("newColor: " +newColor);
         });
 
     </script>
@@ -411,6 +467,81 @@
                 line = null; // Đặt lại biến
             }
         });
+
+    </script>
+    <script>
+        const canvasWrapper = document.querySelector('.canvas-wrapper');
+        let ctx = canvas.getContext('2d');
+        //let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+        let scale = 1; // Để theo dõi tỷ lệ zoom
+        let offsetX = 0;
+        let offsetY = 0;
+
+        // Kiểm tra sự tồn tại của canvas trước khi thao tác
+        if (canvasWrapper) {
+            // Xử lý sự kiện di chuyển và zoom
+            let touchStartDistance = 0;
+            let touchStartScale = 1;
+
+            canvasWrapper.addEventListener('touchstart', function (e) {
+                if (e.touches.length === 2) {
+                    // Khi bắt đầu chạm hai ngón tay (zoom)
+                    touchStartDistance = getDistance(e.touches);
+                    touchStartScale = scale;
+                    e.preventDefault();
+                } else if (e.touches.length === 1) {
+                    // Khi bắt đầu chạm một ngón tay (di chuyển hoặc vẽ)
+                    lastX = e.touches[0].clientX;
+                    lastY = e.touches[0].clientY;
+
+                    if (canvas.isDrawingMode) {
+                        e.preventDefault();
+                    } 
+                }
+            });
+
+            canvasWrapper.addEventListener('touchmove', function (e) {
+                if (e.touches.length === 2) {
+                    // Xử lý zoom
+                    let currentDistance = getDistance(e.touches);
+                    scale = touchStartScale * (currentDistance / touchStartDistance);
+
+                    // Cập nhật kích thước canvas theo tỷ lệ mới
+                    if (canvasWrapper.style) {
+                        canvasWrapper.style.transform = `scale(${scale})`;
+                    }
+                    e.preventDefault();
+                } else if (e.touches.length === 1) {
+                    let dx = e.touches[0].clientX - lastX;
+                    let dy = e.touches[0].clientY - lastY;
+
+                    if (canvas.isDrawingMode) {
+                        e.preventDefault(); // Ngừng di chuyển canvas
+                    } else {
+                        // Di chuyển canvas khi không vẽ
+                        offsetX += dx;
+                        offsetY += dy;
+                        if (canvasWrapper.style) {
+                            canvasWrapper.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+                        }
+                        lastX = e.touches[0].clientX;
+                        lastY = e.touches[0].clientY;
+                        e.preventDefault();
+                    }
+                }
+            });
+
+            // Tính toán khoảng cách giữa hai ngón tay
+            function getDistance(touches) {
+                let x1 = touches[0].clientX;
+                let y1 = touches[0].clientY;
+                let x2 = touches[1].clientX;
+                let y2 = touches[1].clientY;
+                return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            }
+        } 
 
     </script>
 </body>
