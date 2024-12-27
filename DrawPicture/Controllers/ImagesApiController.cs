@@ -83,6 +83,40 @@ namespace DrawPicture.Controllers
                 return StatusCode(500, new { message = "Lỗi khi lưu hình ảnh", error = ex.Message });
             }
         }
+
+        [HttpPost("like")]
+        public async Task<IActionResult> LikePost(string userId, int drawId)
+        {
+            // Kiểm tra nếu người dùng đã thích bài viết
+            var existingLike = await _context.LikeUsers
+                .FirstOrDefaultAsync(like => like.UserId == userId && like.DrawId == drawId);
+
+            if (existingLike != null)
+            {
+                return BadRequest(new { message = "Bạn đã thích bài viết này!" });
+            }
+
+            var getDraw = await _context.DrawStudents.FindAsync(drawId);
+
+            getDraw.Like = getDraw.Like + 1;
+
+            // Tạo lượt thích mới
+            var newLike = new LikeUser
+            {
+                UserId = userId,
+                DrawId = drawId,
+                LikedDate = DateTime.UtcNow
+            };
+
+            _context.LikeUsers.Add(newLike);
+            _context.DrawStudents.Update(getDraw);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Đã thích bài viết thành công!" });
+        }
+
+
         public class ImageRequest
         {
             public string ImageData { get; set; }
@@ -91,5 +125,6 @@ namespace DrawPicture.Controllers
             public bool Status { get; set; }
             public string Class { get; set; }
         }
+
     }
 }

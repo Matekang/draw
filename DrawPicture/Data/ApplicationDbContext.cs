@@ -11,5 +11,6 @@ namespace DrawPicture.Data
 
         public DbSet<DrawStudent> DrawStudents { get; set; }
         public DbSet<Picture> Pictures { get; set; }
+        public DbSet<LikeUser> LikeUsers { get; set; }
     }
 }
