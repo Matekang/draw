@@ -132,7 +132,7 @@
                 <option value="10" selected>Vừa</option>
                 <option value="20">Lớn</option>
             </select>
-            <input type="range" id="brush-opacity" min="-20" max="0" step="1" value="0">
+            <input type="range" id="brush-opacity" min="-10" max="10" step="1" value="0">
             <div id="color-picker">
                 <div class="color-box" style="background-color: rgb(255, 0, 0);" data-color="rgb(255, 0, 0)"></div>
                 <div class="color-box" style="background-color: rgb(255, 165, 0);" data-color="rgb(255, 165, 0)"></div>
@@ -154,6 +154,7 @@
                 <div class="color-box" style="background-color: rgb(210, 180, 140);" data-color="rgb(210, 180, 140)"></div>
             </div>
             <button id="draw-line">Vẽ đường thẳng</button>
+            <button id="undo">⟲</button>
             <button id="eraser">Tẩy</button>
             <button id="change-image">Chọn hình khác</button>
             <button id="save-image">Lưu tác phẩm</button>
@@ -503,7 +504,65 @@
         }
 
     </script>
+    <script>
+             // Mảng lưu trạng thái của canvas
+        let canvasStates = [];
+        let currentStateIndex = -1;
 
+        // Hàm lưu trạng thái hiện tại của canvas
+        function saveState() {
+            if (currentStateIndex < canvasStates.length - 1) {
+                // Xóa các trạng thái redo
+                canvasStates = canvasStates.slice(0, currentStateIndex + 1);
+            }
+
+            // Lưu trạng thái hiện tại
+            canvasStates.push(JSON.stringify(canvas));
+            currentStateIndex++;
+
+            console.log("Saved State:", { canvasStates, currentStateIndex }); // Debug log
+        }
+
+        // Lưu trạng thái khi canvas có thay đổi
+        canvas.on('object:added', saveState);
+        canvas.on('object:modified', saveState);
+        canvas.on('object:removed', saveState);
+
+        // Hàm "Quay lại" (Undo)
+        function undo() {
+            if (currentStateIndex > 0) {
+                currentStateIndex--; // Lùi về trạng thái trước đó
+                const previousState = canvasStates[currentStateIndex];
+                canvas.loadFromJSON(previousState, function () {
+                    canvas.renderAll();
+                });
+                console.log("Undo:", { currentStateIndex }); // Debug log
+            } else {
+                console.log('Không còn trạng thái để quay lại');
+            }
+        }
+
+        // // Hàm "Làm lại" (Redo)
+        // function redo() {
+        //     if (currentStateIndex < canvasStates.length - 1) {
+        //         currentStateIndex++; // Tiến tới trạng thái kế tiếp
+        //         const nextState = canvasStates[currentStateIndex];
+        //         canvas.loadFromJSON(nextState, function () {
+        //             canvas.renderAll();
+        //         });
+        //         console.log("Redo:", { currentStateIndex }); // Debug log
+        //     } else {
+        //         console.log('Không còn trạng thái để làm lại');
+        //     }
+        // }
+
+        // Gắn sự kiện cho nút "Quay lại" và "Làm lại"
+        document.getElementById('undo').addEventListener('click', undo);
+        //document.getElementById('redo').addEventListener('click', redo);
+
+        // Lưu trạng thái ban đầu
+        saveState();
+    </script>
 
 
 </body>
