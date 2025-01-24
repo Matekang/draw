@@ -16,7 +16,7 @@ namespace DrawPicture.Controllers
             {
                 return RedirectToAction("Index");
             }
-            string[] content = new string[5];
+            string[] content = new string[10];
             string result = "";
             switch (topic.ToString())
             {
@@ -79,13 +79,19 @@ namespace DrawPicture.Controllers
                 //                ";
                 //    break;
                 case "chude4_hk1":
-                    content = new string[5];
+                    content = new string[11];
 
                     content[0] = "Chủ đề 4: Góc học tập của em";
                     content[1] = "-Vẽ một chậu hoa với loài hoa mà em yêu thích";
                     content[2] = "-Con vật em yêu thích là gì?";
                     content[3] = "-Hãy thiết kế một hộp đựng bút mà em mơ ước nhé!";
                     content[4] = "-Loài hoa em yêu thích là gì?";
+                    content[5] = "-Thiết kế chậu hoa mà em yêu thích";
+                    content[6] = "-Vẽ một loài vật sống dưới nước mà em yêu thích\r\n";
+                    content[7] = "-Vẽ một loài vật sống trên cạn mà em yêu thích\r\n";
+                    content[8] = "-Vẽ  lại chiếc hộp bút mà em đang sử dụng \r\n";
+                    content[9] = "-Em muốn tặng cô giáo bó hoa như nào vào ngày 20/11 nhỉ?\r\n";
+                    content[10] = "-Em muốn tặng cho mẹ bó hoa như nào vào ngày 8/3 nhỉ?\r\n";
                     result = GetContentRandom(content);
                     break;
                 //case "chude4_hk2":
