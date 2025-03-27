@@ -78,7 +78,7 @@ namespace DrawPicture.Controllers
                 //                -Vẽ hình ảnh người thân của em trong một hoạt động thường ngày (nấu ăn, đọc sách, v.v.).
                 //                ";
                 //    break;
-                case "chude4_hk1":
+                case "chude4":
                     content = new string[11];
 
                     content[0] = "Chủ đề 4: Góc học tập của em";

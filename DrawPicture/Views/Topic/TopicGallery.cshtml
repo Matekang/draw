@@ -42,7 +42,12 @@
     <div class="image-grid">
         @foreach (var image in Model)
         {
-            <img src="~/images/topic/@ViewBag.Topic/@image" onclick="selectImage('/images/topic/@ViewBag.Topic/@image')" alt="Hình ảnh" />
+            if (image != "1.jpg") // Kiểm tra nếu tên ảnh không phải là 1.jpg
+            {
+                <img src="~/images/topic/@ViewBag.Topic/@image"
+                     onclick="selectImage('/images/topic/@ViewBag.Topic/@image')"
+                     alt="Hình ảnh" />
+            }
         }
     </div>
 </body>

@@ -61,6 +61,13 @@
             text-align: center;">
             Trưng bày
         </h1>
+        <h3 style="
+            font-size: 25px;
+            padding-top: 20px;
+            font-family: math;
+            text-align: center;">
+            Tổng số tác phẩm của các họa sỹ nhí : @Model.Count().ToString()
+        </h3>
     </div>
     <div class="main-posts">
         <div class="container">
@@ -78,23 +85,21 @@
                                     <div class="inside">
                                         <h4>@i.Name</h4>
                                         <p>Lớp : @i.Class</p>
-                                        <!-- Truyền i.Id vào hàm -->
                                             <button id="like-button-@i.Id" onclick="likePost('@i.Id')" class="btn btn-like">
                                                 @i.Like ❤️
                                             </button>
                                     </div>
                                 </div>
                             </div>
-                        </div> <!-- /.post-masonry -->
+                        </div> 
                     }
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
     <script>
-        const userId = '@userId'; // Render Razor userId phía server
+        const userId = '@userId';
         async function likePost(drawId) {
             try {
                 const response = await fetch(`/api/ImagesApi/like?userId=${userId}&drawId=${drawId}`, {
